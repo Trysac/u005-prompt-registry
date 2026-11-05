@@ -240,6 +240,19 @@ def test_missing_unexpected_and_type_errors(tmp_path: Path) -> None:
     assert bad.value.name == "n"
 
 
+def test_acceptance_render_literals(tmp_path: Path) -> None:
+    prompt = load_one(tmp_path, HEADER + "Hi {{ name }} x{{n}}")
+    assert render(prompt, {"name": "Ana", "n": 2}) == "Hi Ana x2"
+    assert render(prompt, {"name": "{{n}}", "n": 2}) == "Hi {{n}} x2"
+    esc = load_one(tmp_path / "e", NAME_HEADER + r"\{{name}} {{name}}")
+    assert render(esc, {"name": "Ana"}) == "{{name}} Ana"
+    only_n = load_one(tmp_path / "o", N_HEADER + "{{n}}\n")
+    with pytest.raises(VariableTypeError) as bad:
+        render(only_n, {"n": True})
+    assert bad.value.code == "variable_type"
+    assert (bad.value.expected, bad.value.actual) == ("int", "bool")
+
+
 def test_undeclared_placeholder_reports_line(tmp_path: Path) -> None:
     lines = [
         "---",

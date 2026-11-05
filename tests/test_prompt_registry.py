@@ -514,7 +514,7 @@ def test_render_argument_validation(tmp_path: Path) -> None:
 
 def test_render_output_limit(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     prompt = load_one(tmp_path, NAME_HEADER + "{{name}}\n")
-    monkeypatch.setattr("prompt_registry.render.MAX_RENDERED_CHARS", 10)
+    monkeypatch.setattr(sys.modules["prompt_registry.render"], "MAX_RENDERED_CHARS", 10)
     assert render(prompt, {"name": "x" * 10}) == "x" * 10
     with pytest.raises(PromptError) as info:
         render(prompt, {"name": "x" * 11})

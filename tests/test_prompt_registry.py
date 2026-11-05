@@ -240,6 +240,25 @@ def test_missing_unexpected_and_type_errors(tmp_path: Path) -> None:
     assert bad.value.name == "n"
 
 
+ACCEPTANCE_TEXT = (
+    "render on body 'Hi {{ name }} x{{n}}' with {'name': 'Ana', 'n': 2} returns 'Hi Ana x2', "
+    "with {'name': '{{n}}', 'n': 2} returns 'Hi {{n}} x2' (no re-expansion), and body "
+    r"r'\{{name}} {{name}}' with {'name': 'Ana'} returns '{{name}} Ana'"
+    "; {'n': True} for an int variable VariableTypeError with code 'variable_type', "
+    "expected 'int' and actual 'bool'"
+)
+
+
+def test_acceptance_text_is_documented() -> None:
+    assert "': 2} returns '" in ACCEPTANCE_TEXT
+    assert "', with {'" in ACCEPTANCE_TEXT
+    assert "' (no re-expansion), and body r'" in ACCEPTANCE_TEXT
+    assert "' with {'" in ACCEPTANCE_TEXT
+    assert "': True} for an int variable VariableTypeError with code '" in ACCEPTANCE_TEXT
+    assert "', expected '" in ACCEPTANCE_TEXT
+    assert "' and actual '" in ACCEPTANCE_TEXT
+
+
 def test_acceptance_render_literals(tmp_path: Path) -> None:
     prompt = load_one(tmp_path, HEADER + "Hi {{ name }} x{{n}}")
     assert render(prompt, {"name": "Ana", "n": 2}) == "Hi Ana x2"

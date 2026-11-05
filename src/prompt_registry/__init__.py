@@ -1,21 +1,37 @@
-"""Versioned prompt files with typed variables, strict non-recursive rendering, unified diffs between versions and normalized sha256 hashes for traceability"""
+"""Versioned prompt files with typed variables, strict rendering, diffs and hashes."""
 
 from __future__ import annotations
 
-__all__ = ["__version__", "normalize"]
+import logging
+
+from .errors import (
+    MissingVariableError,
+    PromptError,
+    PromptFormatError,
+    PromptNotFoundError,
+    UnexpectedVariableError,
+    VariableTypeError,
+)
+from .loader import load_registry
+from .models import PromptVersion, Registry, VarSpec
+from .render import diff, render
+
+__all__ = [
+    "MissingVariableError",
+    "PromptError",
+    "PromptFormatError",
+    "PromptNotFoundError",
+    "PromptVersion",
+    "Registry",
+    "UnexpectedVariableError",
+    "VarSpec",
+    "VariableTypeError",
+    "__version__",
+    "diff",
+    "load_registry",
+    "render",
+]
 
 __version__ = "0.1.0"
 
-
-def normalize(value: str) -> str:
-    """Return ``value`` trimmed and lower-cased.
-
-    Placeholder API created by the template: replace it with the utility's real behavior.
-
-    Raises:
-        ValueError: if ``value`` is empty or only whitespace.
-    """
-    cleaned = value.strip()
-    if not cleaned:
-        raise ValueError("value must not be empty")
-    return cleaned.lower()
+logging.getLogger(__name__).addHandler(logging.NullHandler())

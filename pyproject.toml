@@ -19,6 +19,9 @@ classifiers = [
 ]
 dependencies = []
 
+[project.scripts]
+prompt-registry = "prompt_registry.__main__:main"
+
 [project.urls]
 Homepage = "https://github.com/Trysac/u005-prompt-registry"
 Source = "https://github.com/Trysac/u005-prompt-registry"

@@ -82,7 +82,9 @@ def load_one(root: Path, content: str | bytes) -> PromptVersion:
     return load_registry(root).get("p")
 
 
-def manual(variables: dict[str, prompt_registry.VarSpec] | None = None, body: str = "b") -> PromptVersion:
+def manual(
+    variables: dict[str, prompt_registry.VarSpec] | None = None, body: str = "b"
+) -> PromptVersion:
     """Build a prompt without going through the loader."""
     return PromptVersion("p", 1, "d", variables or {}, body, Path("p.md"), "h")
 
@@ -530,11 +532,21 @@ def test_error_types_and_codes() -> None:
     assert PromptError("x", "too_large").code == "too_large"
     assert PromptNotFoundError("x").code == "not_found"
     error = PromptFormatError("bad", Path("f.md"), 3)
-    assert (error.code, error.path, error.line, str(error)) == ("format", Path("f.md"), 3, "bad (line 3)")
+    assert (error.code, error.path, error.line, str(error)) == (
+        "format",
+        Path("f.md"),
+        3,
+        "bad (line 3)",
+    )
     plain = PromptFormatError("bad")
     assert (plain.path, plain.line, str(plain)) == (None, None, "bad")
     typed = VariableTypeError("n", "int", "bool")
-    assert (typed.code, typed.name, typed.expected, typed.actual) == ("variable_type", "n", "int", "bool")
+    assert (typed.code, typed.name, typed.expected, typed.actual) == (
+        "variable_type",
+        "n",
+        "int",
+        "bool",
+    )
     for subclass in (
         PromptNotFoundError,
         PromptFormatError,
